@@ -31,7 +31,7 @@ export default {}
         color: #48cbff;
         span {
             display: inline-block;
-            padding-bottom: 8px;
+            padding-bottom: 5px;
             border-bottom: 2px solid #48cbff;
         }
     }
