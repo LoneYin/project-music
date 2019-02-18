@@ -20,6 +20,7 @@ export default {}
 </script>
 
 <style lang="less" scoped>
+@import '~assets/style/variable.less';
 .navigator {
     display: flex;
     justify-content: space-around;
@@ -28,12 +29,15 @@ export default {}
         text-align: center;
     }
     .router-link-active {
-        color: #48cbff;
-        span {
+        .nav-link {
+            color: #48cbff;
             display: inline-block;
             padding-bottom: 5px;
             border-bottom: 2px solid #48cbff;
         }
+    }
+    .nav-link {
+        color: @color-text-n;
     }
 }
 </style>

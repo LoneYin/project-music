@@ -3,15 +3,27 @@
 		<div class="slider-group" ref="sliderGroup">
 			<slot></slot>
 		</div>
-		<ul class="dots"></ul>
+		<ul class="dots">
+			<span
+				v-for="(item, index) in dots"
+				:key="index"
+				:class="currentIndex === index ? 'dot active' : 'dot'"
+			></span>
+		</ul>
 	</div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
-import { addClass } from '../../utils/dom'
+import { addClass } from 'utils/dom'
 
 export default {
+	data() {
+		return {
+			dots: [],
+			currentIndex: 0
+		}
+	},
 	props: {
 		loop: {
 			type: Boolean,
@@ -29,8 +41,17 @@ export default {
 	mounted() {
 		setTimeout(() => {
 			this.setSliderWidth()
+			this.initDots()
 			this.initSlider()
 		}, 20)
+
+		this.autoPlay && this.play()
+
+		window.addEventListener('resize', () => {
+			if (!this.slider) return
+			this.setSliderWidth(true)
+			this.slider.refresh()
+		})
 	},
 	methods: {
 		initSlider() {
@@ -42,11 +63,19 @@ export default {
 					loop: this.loop,
 					threshold: 0.3,
 					speed: 400
-				},
-				click: true
+				}
+			})
+
+			this.slider.on('scrollEnd', () => {
+				let pageIndex = this.slider.getCurrentPage().pageX
+				this.currentIndex = pageIndex
+				this.autoPlay && this.play()
 			})
 		},
-		setSliderWidth() {
+		initDots() {
+			this.dots = new Array(this.children.length)
+		},
+		setSliderWidth(isResize) {
 			this.children = this.$refs.sliderGroup.children
 
 			let width = 0
@@ -58,20 +87,28 @@ export default {
 				width += sliderWidth
 			}
 
-			if (this.loop) {
+			if (this.loop && !isResize) {
 				width += 2 * sliderWidth
 			}
 
 			this.$refs.sliderGroup.style.width = width + 'px'
+		},
+		play() {
+			clearTimeout(this.timer)
+			this.timer = setTimeout(() => {
+				this.slider.next()
+			}, this.interval)
 		}
 	}
 }
 </script>
 <style lang="less" scoped>
+@import '~assets/style/variable.less';
 .slider {
 	width: 100%;
 	overflow: hidden;
 	margin-top: 10px;
+	position: relative;
 }
 .slider-group {
 	overflow: hidden;
@@ -86,6 +123,29 @@ export default {
 	}
 	img {
 		width: 100%;
+	}
+}
+.dots {
+	position: absolute;
+	right: 0;
+	left: 0;
+	bottom: 12px;
+	transform: translateZ(1px);
+	text-align: center;
+	font-size: 0;
+	.dot {
+		transition: width 0.3s ease;
+		display: inline-block;
+		margin: 0 4px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: @color-text-n;
+		&.active {
+			width: 20px;
+			border-radius: 5px;
+			background: @color-text-l;
+		}
 	}
 }
 </style>

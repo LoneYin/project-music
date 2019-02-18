@@ -54,4 +54,7 @@ export default {
 .list-title {
 	font-size: 16px;
 }
+.list-title {
+	margin-top: 20px;
+}
 </style>
