@@ -53,6 +53,9 @@ export default {
 			this.slider.refresh()
 		})
 	},
+	destroyed() {
+		clearTimeout(this.timer)
+	},
 	methods: {
 		initSlider() {
 			this.slider = new BScroll(this.$refs.slider, {
@@ -70,6 +73,10 @@ export default {
 				let pageIndex = this.slider.getCurrentPage().pageX
 				this.currentIndex = pageIndex
 				this.autoPlay && this.play()
+			})
+
+			this.slider.on('beforeScrollStart', () => {
+				this.autoPlay && clearTimeout(this.timer)
 			})
 		},
 		initDots() {
@@ -104,12 +111,6 @@ export default {
 </script>
 <style lang="less" scoped>
 @import '~assets/style/variable.less';
-.slider {
-	width: 100%;
-	overflow: hidden;
-	margin-top: 10px;
-	position: relative;
-}
 .slider-group {
 	overflow: hidden;
 }

@@ -11,3 +11,5 @@ export const defaultOptions = {
 }
 
 export const ERR_OK = 0
+
+export const server = 'http://192.168.50.113:3000'
