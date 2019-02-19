@@ -9,8 +9,8 @@ export default {}
 <style lang="less" scoped>
 @import '~assets/style/variable.less';
 .header {
-    font-size: @font-size-large-x;
-    padding: 20px 0; 
+    font-size: @font-size-large;
+    padding: 15px 0; 
     font-weight: 600;
 }
 </style>

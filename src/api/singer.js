@@ -1,0 +1,22 @@
+import { commonParams, defaultOptions } from './config'
+import jsonp from 'utils/jsonp'
+
+export function getSingerList() {
+    const url = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg'
+
+    const params = {
+        ...commonParams,
+        ...{
+            channel: 'singer',
+            page: 'list',
+            key: 'all_all_all',
+            pagesize: 100,
+            pagenum: 1,
+            hostUin: 0,
+            needNewCode: 0,
+            platform: 'yqq'
+        }
+    }
+
+    return jsonp(url, params, defaultOptions)
+}

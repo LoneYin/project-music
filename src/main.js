@@ -6,8 +6,12 @@ import store from './store'
 import 'assets/style/base.less'
 
 import fastclick from 'fastclick'
-fastclick.attach(document.body)
+import VueLazyload from 'vue-lazyload'
 
+fastclick.attach(document.body)
+Vue.use(VueLazyload, {
+    loading: require('./assets/image/default.jpg')
+})
 Vue.config.productionTip = false
 
 new Vue({

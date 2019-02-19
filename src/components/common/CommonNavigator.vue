@@ -25,6 +25,7 @@ export default {}
     display: flex;
     justify-content: space-around;
     padding-bottom: 10px;
+    font-size: @font-size-medium;
     .nav-item {
         width: 25%;
         text-align: center;
