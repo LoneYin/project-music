@@ -1,10 +1,13 @@
 <template>
-	<div class="singer">singer</div>
+	<div class="singer">
+		<Listview :data="singerList"></Listview>
+	</div>
 </template>
 
 <script>
 import { getSingerList } from 'api/singer'
 import { ERR_OK } from 'api/config'
+import Listview from 'components/listview/Listview'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LENGTH = 10
@@ -22,6 +25,9 @@ export default {
 			singerList: []
 		}
 	},
+	components: {
+		Listview
+	},
 	created() {
 		this.getSingerListAction()
 	},
@@ -29,7 +35,7 @@ export default {
 		getSingerListAction() {
 			getSingerList().then(res => {
 				if (res.code === ERR_OK) {
-					console.log(this.formatSingerList(res.data.list))
+					this.singerList = this.formatSingerList(res.data.list)
 				}
 			})
 		},
@@ -40,6 +46,7 @@ export default {
 					items: []
 				}
 			}
+
 			data.forEach((item, index) => {
 				if (index < HOT_SINGER_LENGTH) {
 					map.hot.items.push(
@@ -57,7 +64,20 @@ export default {
 					singerItem(item.Fsinger_mid, item.Fsinger_name)
 				)
 			})
-			return map
+
+			const hot = []
+			const rest = []
+			for (let key in map) {
+				const val = map[key]
+				if (val.title.match(/[a-zA-Z]/)) {
+					rest.push(val)
+				} else if (val.title === HOT_NAME) {
+					hot.push(val)
+				}
+			}
+			rest.sort((a, b) => a.title.charCodeAt(0) - b.title.charCodeAt(0))
+
+			return hot.concat(rest)
 		}
 	}
 }
