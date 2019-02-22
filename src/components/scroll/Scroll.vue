@@ -16,6 +16,10 @@ export default {
 		click: {
 			type: Boolean,
 			default: true
+		},
+		scrollEvent: {
+			type: Boolean,
+			default: false
 		}
 	},
 	mounted() {
@@ -31,6 +35,11 @@ export default {
 				probeType,
 				click
 			})
+			if (this.scrollEvent) {
+				this.scroll.on('scroll', position => {
+					this.$emit('onScroll', position)
+				})
+			}
 		},
 		enable() {
 			this.scroll && this.scroll.enable()
