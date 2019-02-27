@@ -12,5 +12,6 @@ export default {}
     font-size: @font-size-large;
     padding: 15px 0; 
     font-weight: 600;
+    text-align: center;
 }
 </style>

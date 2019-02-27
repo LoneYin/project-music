@@ -119,7 +119,7 @@ export default {
 		},
 		offset(newVal) {
 			let fixedTop =
-				newVal > 0 && newVal < TITLE_HEIGHT ? newVal - TITLE_HEIGHT : 0
+				(newVal > 0 && newVal < TITLE_HEIGHT) ? (newVal - TITLE_HEIGHT) : 0
 			if (lastFixedTop === fixedTop) {
 				return
 			}
@@ -239,12 +239,6 @@ export default {
 			line-height: 30px;
 			font-weight: normal;
 		}
-	}
-	.loading-container {
-		position: absolute;
-		width: 100%;
-		top: 50%;
-		transform: translateY(-50%);
 	}
 }
 </style>
