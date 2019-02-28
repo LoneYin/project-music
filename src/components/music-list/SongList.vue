@@ -3,10 +3,10 @@
         <ul>
             <li v-for="song in songs" class="item" :key="song.id">
                 <div class="content">
-                    <h2 class="name">
+                    <h2 class="name ellipsis">
                         {{song.name}}
                     </h2>
-                    <p class="desc">{{getDesc(song)}}</p>
+                    <p class="desc ellipsis">{{getDesc(song)}}</p>
                 </div>
             </li>
         </ul>
