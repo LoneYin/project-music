@@ -1,5 +1,6 @@
+// singer
 export const SET_SINGER = 'SET_SINGER'
-
+// player
 export const SET_PLAYING = 'SET_PLAYING'
 export const SET_FULL_SCREEN = 'SET_FULL_SCREEN'
 export const SET_PLAYLIST = 'SET_PLAYLIST'
