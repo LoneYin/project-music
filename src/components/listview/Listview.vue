@@ -228,7 +228,7 @@ export default {
 	}
 	.list-fixed {
 		position: absolute;
-		top: 0;
+		top: -1px;
 		left: 0;
 		width: 100%;
 		.fixed-title {
