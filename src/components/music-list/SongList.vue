@@ -3,7 +3,7 @@
         <ul>
             <li v-for="(song, index) in songs" class="item" :key="song.id" @click="selectItem(song, index)">
                 <div class="content">
-                    <h2 class="name ellipsis">
+                    <h2 :class="song.url ? 'name ellipsis' : 'no-source name ellipsis'">
                         {{song.name}}
                     </h2>
                     <p class="desc ellipsis">{{getDesc(song)}}</p>
@@ -26,7 +26,11 @@ export default {
             return `${song.singer} - ${song.album}`
         },
         selectItem(song, index) {
-            this.$emit('select', song, index)
+            if (song.url) {
+                this.$emit('select', song, index)
+            } else {
+                console.log('没有资源')
+            } 
         }
     }
 }
@@ -84,6 +88,9 @@ export default {
         .name {
             color: @color-text;
             font-size: @font-size-medium-x;
+            &.no-source {
+                color: @color-text-d;
+            }
         }
         .desc {
             margin-top: 4px;

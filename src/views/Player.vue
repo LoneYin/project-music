@@ -66,6 +66,7 @@
 				</div>
 			</div>
 		</transition>
+		<audio :src="currentSong.url" ref="audio"></audio>
 	</div>
 </template>
 
@@ -76,6 +77,13 @@ import { prefixStyle } from 'utils/prefix'
 export default {
 	computed: {
 		...mapGetters(['fullScreen', 'playList', 'currentSong'])
+	},
+	watch: {
+		currentSong() {
+			this.$nextTick(() => {
+				this.$refs.audio.play()
+			})
+		}
 	},
 	methods: {
 		minimize() {

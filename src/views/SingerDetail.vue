@@ -10,7 +10,7 @@
 import { mapState } from 'vuex'
 import { getSingerDetail } from 'api/singer'
 import { ERR_OK } from 'api/config'
-import { createSong } from 'utils/song'
+import { createSong, processSongsUrl } from 'utils/song'
 import MusicList from 'components/music-list/MusicList'
 export default {
 	data() {
@@ -30,7 +30,9 @@ export default {
 		getSingerDetailAction() {
 			getSingerDetail(this.singer.id).then(res => {
 				if (res.code === ERR_OK) {
-					this.songs = this.formatingSongs(res.data.list)
+					processSongsUrl(this.formatingSongs(res.data.list)).then((songs) => {
+						this.songs = songs
+					})
 				}
 			})
 		},

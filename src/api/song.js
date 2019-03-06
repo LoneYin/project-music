@@ -1,9 +1,9 @@
-import { ERR_OK, commonParams } from 'api/config'
+import { ERR_OK, commonParams, server } from 'api/config'
 import { getUid } from 'utils/uid'
 import axios from 'axios'
 
 export function getSongsUrl(songs) {
-    const url = '/api/getPurlUrl'
+    const url = server + '/api/getPurlUrl'
 
     let mids = []
     let types = []
@@ -41,7 +41,7 @@ export function getSongsUrl(songs) {
                         let urlMid = res.url_mid
                         if (urlMid && urlMid.code === ERR_OK) {
                             const info = urlMid.data.midurlinfo[0]
-                            if (info && info.purl) {
+                            if (info) {
                                 resolve(res)
                             } else {
                                 retry()
