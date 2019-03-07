@@ -22,8 +22,8 @@
 				<div class="middle">
 					<div class="middle-l">
 						<div class="cd-wrapper" ref="cdWrapper">
-							<div class="cd">
-								<img class="img" :src="currentSong.image" alt>
+							<div class="cd" ref="imageWrapper">
+								<img ref="image" class="image" :class="rotate" :src="currentSong.image" alt>
 							</div>
 						</div>
 					</div>
@@ -37,7 +37,7 @@
 							<i class="icon-prev"></i>
 						</div>
 						<div class="icon i-center">
-							<i class="icon-play"></i>
+							<i @click="togglePlaying" :class="playing ? 'icon-pause' : 'icon-play'"></i>
 						</div>
 						<div class="icon i-right">
 							<i class="icon-next"></i>
@@ -52,14 +52,16 @@
 		<transition name="mini">
 			<div class="mini-player" v-show="!fullScreen" @click="maximize">
 				<div class="icon">
-					<img width="40" height="40" :src="currentSong.image" alt>
+					<div class="imgWrapper" ref="miniWrapper">
+						<img ref="miniImage" :class="rotate" width="40" height="40" :src="currentSong.image" alt>
+					</div>
 				</div>
 				<div class="text">
 					<h2 class="name" v-html="currentSong.name"></h2>
 					<p class="desc" v-html="currentSong.singer"></p>
 				</div>
 				<div class="control">
-					<i class="icon-mini"></i>
+					<i @click.stop="togglePlaying" :class="playing ? 'icon-pause-mini' : 'icon-play-mini'"></i>
 				</div>
 				<div class="control">
 					<i class="icon-playlist"></i>
@@ -76,12 +78,21 @@ import keyframeAnimation from 'create-keyframe-animation'
 import { prefixStyle } from 'utils/prefix'
 export default {
 	computed: {
-		...mapGetters(['fullScreen', 'playList', 'currentSong'])
+		...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing']),
+		rotate() {
+			return this.playing ? 'play' : ''
+		}
 	},
 	watch: {
 		currentSong() {
 			this.$nextTick(() => {
 				this.$refs.audio.play()
+			})
+		},
+		playing(newStatus) {
+			const audio = this.$refs.audio
+			this.$nextTick(() => {
+				newStatus ? audio.play() : audio.pause()
 			})
 		}
 	},
@@ -152,8 +163,12 @@ export default {
 				scale
 			}
 		},
+		togglePlaying() {
+			this.setPlaying(!this.playing)
+		},
 		...mapMutations({
-			setFullScreen: 'SET_FULL_SCREEN'
+			setFullScreen: 'SET_FULL_SCREEN',
+			setPlaying: 'SET_PLAYING'
 		})
 	}
 }
@@ -236,7 +251,7 @@ export default {
 						width: 100%;
 						height: 100%;
 						border-radius: 50%;
-						.img {
+						.image {
 							position: absolute;
 							left: 0;
 							top: 0;

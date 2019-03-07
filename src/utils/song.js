@@ -47,12 +47,21 @@ export function processSongsUrl(songs) {
     return getSongsUrl(songs).then(res => {
         if (res.code === ERR_OK) {
             let midUrlInfo = res.url_mid.data.midurlinfo
+            let _vkey = ''
+            for (let item of midUrlInfo) {
+                if (item.vkey) {
+                    _vkey = item.vkey
+                    break
+                }
+            }
             midUrlInfo.forEach((info, index) => {
                 let song = songs[index]
                 if (info.purl) {
                     song.url = info.purl
-                } else if (info.vkey) {
-                    song.url = `http://dl.stream.qqmusic.qq.com/${info.filename}?guid=${info.vkey}&uin=0&fromtag=38`
+                } else if (_vkey) {
+                    song.url = `http://dl.stream.qqmusic.qq.com/${
+                        info.filename
+                    }?guid=${res.guid}&vkey=${info.vkey || _vkey}&uin=0&fromtag=38`
                 } else {
                     song.url = ''
                 }

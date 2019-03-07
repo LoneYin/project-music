@@ -13,10 +13,10 @@ export function getSongsUrl(songs) {
         types.push(0)
     })
 
-    const urlMid = genUrlMid(mids, types)
+    const urlMidParam = genUrlMid(mids, types)
 
     const data = {
-        ...commonParams, 
+        ...commonParams,
         ...{
             g_tk: 5381,
             format: 'json',
@@ -33,7 +33,7 @@ export function getSongsUrl(songs) {
             return axios
                 .post(url, {
                     comm: data,
-                    url_mid: urlMid
+                    url_mid: urlMidParam
                 })
                 .then(response => {
                     const res = response.data
@@ -42,6 +42,7 @@ export function getSongsUrl(songs) {
                         if (urlMid && urlMid.code === ERR_OK) {
                             const info = urlMid.data.midurlinfo[0]
                             if (info) {
+                                res.guid = urlMidParam.param.guid
                                 resolve(res)
                             } else {
                                 retry()
