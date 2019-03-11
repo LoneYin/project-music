@@ -16,8 +16,8 @@
 					<div class="back">
 						<i class="icon-back" @click="minimize"></i>
 					</div>
-					<h1 class="title" v-html="currentSong.name"></h1>
-					<h2 class="subtitle" v-html="currentSong.singer"></h2>
+					<h1 class="title ellipsis" v-html="currentSong.name"></h1>
+					<h2 class="subtitle ellipsis" v-html="currentSong.singer"></h2>
 				</div>
 				<div class="middle">
 					<div class="middle-l">
@@ -33,14 +33,14 @@
 						<div class="icon i-left">
 							<i class="icon-sequence"></i>
 						</div>
-						<div class="icon i-left">
-							<i class="icon-prev"></i>
+						<div class="icon i-left" :class="readyToPlay ? '' : 'disable'">
+							<i class="icon-prev" @click="prev"></i>
 						</div>
 						<div class="icon i-center">
 							<i @click="togglePlaying" :class="playing ? 'icon-pause' : 'icon-play'"></i>
 						</div>
-						<div class="icon i-right">
-							<i class="icon-next"></i>
+						<div class="icon i-right" :class="readyToPlay ? '' : 'disable'">
+							<i class="icon-next" @click="next"></i>
 						</div>
 						<div class="icon i-right">
 							<i class="icon icon-not-favorite"></i>
@@ -57,8 +57,8 @@
 					</div>
 				</div>
 				<div class="text">
-					<h2 class="name" v-html="currentSong.name"></h2>
-					<p class="desc" v-html="currentSong.singer"></p>
+					<h2 class="name ellipsis" v-html="currentSong.name"></h2>
+					<p class="desc ellipsis" v-html="currentSong.singer"></p>
 				</div>
 				<div class="control">
 					<i @click.stop="togglePlaying" :class="playing ? 'icon-pause-mini' : 'icon-play-mini'"></i>
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 		</transition>
-		<audio :src="currentSong.url" ref="audio"></audio>
+		<audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error"></audio>
 	</div>
 </template>
 
@@ -77,10 +77,15 @@ import { mapGetters, mapMutations } from 'vuex'
 import keyframeAnimation from 'create-keyframe-animation'
 import { prefixStyle } from 'utils/prefix'
 export default {
+	data() {
+		return {
+			readyToPlay: false
+		}
+	},
 	computed: {
-		...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing']),
+		...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex']),
 		rotate() {
-			return this.playing ? 'play' : ''
+			return this.playing ? 'play' : 'stop'
 		}
 	},
 	watch: {
@@ -166,9 +171,40 @@ export default {
 		togglePlaying() {
 			this.setPlaying(!this.playing)
 		},
+		next() {
+			if (!this.readyToPlay) {
+				return
+			}
+			let index = this.currentIndex + 1
+			if (index === this.playList.length) {
+				index = 0
+			}
+			this.setCurrentIndex(index)
+			this.readyToPlay = false
+			!this.playing && this.togglePlaying()
+		},
+		prev() {
+			if (!this.readyToPlay) {
+				return
+			}
+			let index = this.currentIndex - 1
+			if (index === -1) {
+				index = this.playList.length - 1
+			}
+			this.setCurrentIndex(index)
+			this.readyToPlay = false
+			!this.playing && this.togglePlaying()
+		},
+		ready() {
+			this.readyToPlay = true
+		},
+		error() {
+			this.readyToPlay = true
+		},
 		...mapMutations({
 			setFullScreen: 'SET_FULL_SCREEN',
-			setPlaying: 'SET_PLAYING'
+			setPlaying: 'SET_PLAYING',
+			setCurrentIndex: 'SET_CURRENT_INDEX'
 		})
 	}
 }
@@ -260,9 +296,10 @@ export default {
 							box-sizing: border-box;
 							border-radius: 50%;
 							border: 10px solid rgba(255, 255, 255, 0.1);
-						}
-						.play {
 							animation: rotate 20s linear infinite;
+						}
+						.stop {
+							animation-play-state: paused;
 						}
 					}
 				}
@@ -430,10 +467,8 @@ export default {
 				width: 100%;
 				img {
 					border-radius: 50%;
-					&.play {
-						animation: rotate 10s linear infinite;
-					}
-					&.pause {
+					animation: rotate 10s linear infinite;
+					&.stop {
 						animation-play-state: paused;
 					}
 				}

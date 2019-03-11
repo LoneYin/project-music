@@ -36,7 +36,8 @@ export default {
         playList: state => state.playList,
         sequenceList: state => state.sequenceList,
         mode: state => state.mode,
-        currentSong: state => state.playList[state.currentIndex] || {}
+        currentSong: state => state.playList[state.currentIndex] || {},
+        currentIndex: state => state.currentIndex
     },
     actions: {
         playSongFromSingerDetail({ commit, state }, { list, index }) {
