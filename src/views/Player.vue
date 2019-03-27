@@ -37,7 +37,9 @@
                 <div class="bottom">
 					<div class="progress-wrapper">
 						<span class="time time-l">{{formatTime(currentTime)}}</span>
-						<div class="progress-bar-wrapper"></div>
+						<div class="progress-bar-wrapper">
+                            <ProgressBar :percent="percent" />
+                        </div>
 						<span class="time time-r">{{formatTime(currentSong.duration)}}</span>
 					</div>
                     <div class="operators">
@@ -103,6 +105,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import keyframeAnimation from 'create-keyframe-animation'
 import { prefixStyle } from 'utils/prefix'
+import ProgressBar from 'components/progress-bar/ProgressBar.vue'
 export default {
     data() {
         return {
@@ -110,10 +113,16 @@ export default {
             currentTime: 0
         }
     },
+    components: {
+        ProgressBar
+    },
     computed: {
         ...mapGetters(['fullScreen', 'playList', 'currentSong', 'playing', 'currentIndex']),
         rotate() {
             return this.playing ? 'play' : 'stop'
+        },
+        percent() {
+            return this.currentTime / this.currentSong.duration
         }
     },
     watch: {
@@ -431,6 +440,7 @@ export default {
                 }
                 .progress-bar-wrapper {
                     flex: 1;
+                    margin: 0 10px;
                 }
             }
             .operators {
