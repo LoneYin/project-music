@@ -1,5 +1,5 @@
 <template>
-	<div class="progress-bar" ref="progressBar">
+	<div class="progress-bar" ref="progressBar" @click="progressClick">
 		<div class="bar-inner">
 			<div class="progress" ref="progress"></div>
 			<div
@@ -70,6 +70,10 @@ export default {
 		offset(offsetWidth) {
 			this.$refs.progress.style.width = `${offsetWidth}px`
 			this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+		},
+		progressClick(e) {
+			this.offset(e.offsetX)
+			this.triggerPercent()
 		}
 	}
 }
